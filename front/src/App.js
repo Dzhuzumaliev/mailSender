@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import {Button, Grid} from "@mui/material";
+import FormElement from "./components/FormElement/FormElement";
+import {useState} from "react";
+import {useDispatch} from "react-redux";
+import {createMailRequest} from "./store/actions/mailActions";
 
-function App() {
+const App = () => {
+  const dispatch = useDispatch();
+  const [mail, setMail] = useState({
+    message: ""
+  });
+
+  const inputChangeHandler = e => {
+    const {name, value} = e.target;
+    setMail(prev => ({...prev, [name]: value}));
+  };
+
+  const sendMessage = () => {
+    dispatch(createMailRequest({...mail}));
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={{padding: "15px"}}>
+      <Grid container spacing={2} sx={{width: "500px"}}>
+        <FormElement
+          type="text"
+          required={true}
+          label="Enter your message"
+          name="message"
+          value={mail.message}
+          onChange={inputChangeHandler}
+          multiline={true}
+          rows={3}
+        />
+
+        <Grid item>
+          <Button variant='contained' onClick={sendMessage}>Send mail</Button>
+        </Grid>
+      </Grid>
     </div>
-  );
-}
+  )
+};
 
 export default App;
